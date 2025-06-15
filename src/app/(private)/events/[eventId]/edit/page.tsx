@@ -7,7 +7,10 @@ import { notFound } from "next/navigation";
 
 export const revalidate = 0; // Disable revalidation for this page
 
-export default async function EditEventPage({ params : { eventId } } : { params: { eventId: string } }) {
+export default async function EditEventPage(props: { params: Promise<{ eventId: string }> }) {
+  const params = await props.params;
+  const { eventId } = params;
+
   const { userId, redirectToSignIn } = await auth();
   if (!userId) return redirectToSignIn();
 

@@ -41,7 +41,6 @@ import {
     AlertDialogCancel,
     AlertDialogAction
    } from "../ui/alert-dialog";
-// import { AlertDialogContent } from "@radix-ui/react-alert-dialog";
 
 
 const today = new Date()
@@ -49,9 +48,17 @@ const yesterday = new Date(today);
 yesterday.setDate(today.getDate() - 1)
 const defaultDate : string = formatISO(today, { representation: 'date' }) // ex: "2025-06-05"
 
+const eventFallbackValues : z.infer<typeof eventFormSchema> = {
+    title: "",
+    isActive: true,
+    durationInMinutes: 60,
+    date: defaultDate,
+    description: "",
+    };
 
 
 export default function EventForm ({event} : { event?: {
+    id: string,
     title: string;
     description?: string;
     isActive: boolean;
@@ -59,19 +66,28 @@ export default function EventForm ({event} : { event?: {
     date: string; // ISO date string
 }
  }) {
-
     const [isDeletePending, startDeleteTransition] = useTransition();
+  
+    const defaultValues = {
+        ...eventFallbackValues,
+        ...event,
+        };
 
     const form = useForm<z.infer<typeof eventFormSchema>>({
         resolver: zodResolver(eventFormSchema),
-        defaultValues: event ?? {
-            title: "",
-            isActive: true,
-            durationInMinutes: 60, // Default duration
-            date: defaultDate, // Default to today's date
-            description: "totototo",
-        },
-    });
+        defaultValues,
+        });
+
+    // const form = useForm<z.infer<typeof eventFormSchema>>({
+    //     resolver: zodResolver(eventFormSchema),
+    //     defaultValues: event ?? {
+    //         title: "",
+    //         isActive: true,
+    //         durationInMinutes: 60, // Default duration
+    //         date: defaultDate, // Default to today's date
+    //         description: "",
+    //     },
+    // });
 
     async function onSubmit (values: z.infer<typeof eventFormSchema>) {
         const action = event == null ? createEvent : updateEvent.bind(null, event.id);
@@ -167,7 +183,6 @@ export default function EventForm ({event} : { event?: {
                             selected={field.value ? new Date(field.value) : undefined}
                             onSelect={field.onChange}
                             disabled={(date) =>
-                                // date > new Date() || date < new Date("1900-01-01")
                                 date < yesterday
                             }
                             captionLayout="dropdown"
@@ -224,12 +239,6 @@ export default function EventForm ({event} : { event?: {
                             <div
                             className="flex items-center gap-2">
                                 <FormControl>
-                                    {/* <input
-                                        type="checkbox"
-                                        checked={field.value}
-                                        onChange={(e) => field.onChange(e.target.checked)}
-                                        className="h-4 w-4"
-                                    /> */}
                                     <Switch
                                         checked={field.value}
                                         onCheckedChange={field.onChange}
@@ -262,7 +271,6 @@ export default function EventForm ({event} : { event?: {
                         onClick={form.handleSubmit(onSubmit)}
                         disabled={form.formState.isSubmitting || form.formState.isValidating || isDeletePending}
                         >
-                        {/* <Link href="/events">Save</Link> */}
                         Save Event
                     </Button>
                     {event && (

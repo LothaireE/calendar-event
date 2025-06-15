@@ -5,7 +5,7 @@ import { EventsTable } from "@/drizzle/schema";
 import "use-server"
 import { z } from "zod";
 import { eventFormSchema } from "@/schema/events";
-import { eq, and } from "drizzle-orm";
+import { eq, and, count } from "drizzle-orm";
 import { redirect } from "next/navigation";
 
 
@@ -36,22 +36,19 @@ export async function updateEvent(
     
     if (!success || !userId) return { error: true };
 
-    const { rowCount } = await db
-        .update(EventsTable)
-        .set({ ...data })
-        .where(and(eq(EventsTable.id, id), eq(EventsTable.clerkUserId, userId)))
-        .catch((error) => {
-            console.error("Error creating event:", error);
-            return { error: true };
-        });
-
-    if (rowCount === 0) { // if there was event to update
-        console.error("No event found to update with id:", id);
-        // might want to handle this case differently: throw an error or return a specific message
-        return { error: true };
-    }
+    const rowCount = await db
+        .select({ value: count() })
+        .from(EventsTable)
+        .where(and(eq(EventsTable.id, id), eq(EventsTable.clerkUserId, userId)));
     
-    redirect("/events");
+    if (rowCount[0].value === 0) {
+        return { error: true }; // pas d'event trouvé à mettre à jour
+    }
+    await db.update(EventsTable)
+        .set({ ...data })
+        .where(and(eq(EventsTable.id, id), eq(EventsTable.clerkUserId, userId)));
+
+    redirect("/events");    
 }
 
 
@@ -59,18 +56,18 @@ export async function deleteEvent(id: string) {
     const { userId } = await auth();
     if (!userId) return { error: true };
 
-    const { rowCount } = await db
-        .delete(EventsTable)
+    const rowCount = await db
+        .select({ value: count()})
+        .from(EventsTable)
         .where(and(eq(EventsTable.id, id), eq(EventsTable.clerkUserId, userId)))
-        .catch((error) => {
-            console.error("Error deleting event:", error);
-            return { error: true };
-        });
 
-    if (rowCount === 0) {
+    if (rowCount[0].value === 0) {
         console.error("No event found to delete with id:", id);
         return { error: true };
     }
+    await db
+        .delete(EventsTable)
+        .where(and(eq(EventsTable.id, id), eq(EventsTable.clerkUserId, userId)))
 
     return { success: true };
 }

@@ -78,16 +78,6 @@ export default function EventForm ({event} : { event?: {
         defaultValues,
         });
 
-    // const form = useForm<z.infer<typeof eventFormSchema>>({
-    //     resolver: zodResolver(eventFormSchema),
-    //     defaultValues: event ?? {
-    //         title: "",
-    //         isActive: true,
-    //         durationInMinutes: 60, // Default duration
-    //         date: defaultDate, // Default to today's date
-    //         description: "",
-    //     },
-    // });
 
     async function onSubmit (values: z.infer<typeof eventFormSchema>) {
         const action = event == null ? createEvent : updateEvent.bind(null, event.id);
@@ -189,9 +179,6 @@ export default function EventForm ({event} : { event?: {
                             />
                         </PopoverContent>
                         </Popover>
-                        <FormDescription>
-                        Your date of birth is used to calculate your age.
-                        </FormDescription>
                         <FormMessage />
                     </FormItem>
                     )}

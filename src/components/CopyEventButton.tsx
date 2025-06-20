@@ -1,13 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Button, ButtonProps } from "@/components/ui/button";
-// import { Button, ButtonProps } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import { CopyCheck, CopyCheckIcon, CopyX } from "lucide-react";
 
 type CopyState = "idle" | "copied" | "error";
 
-export function CopyEventButton ({ eventId, clerkUserId, ...buttonProps} : Omit<ButtonProps, "children" | "onClick"> & {
+export function CopyEventButton ({ eventId, clerkUserId, ...buttonProps} : Omit<React.ComponentProps<typeof Button>, "children" | "onClick"> & {
   eventId: string;
   clerkUserId: string;
 }) {
@@ -15,8 +14,6 @@ export function CopyEventButton ({ eventId, clerkUserId, ...buttonProps} : Omit<
   const [copyState, setCopyState] = useState<CopyState>("idle");
 
   const handleCopy = () => {
-    // const url = `${window.location.origin}/events/${eventId}?clerkUserId=${clerkUserId}`;
-    // const url = `${location.origin}/book/${eventId}?clerkUserId=${clerkUserId}`;
     const url = `${location.origin}/book/${clerkUserId}/${eventId}`;
     navigator.clipboard
         .writeText(url)

@@ -43,7 +43,6 @@ export const scheduleFormSchema = z.object({
                     path: [index],
                 });
             }
-            // You may want to add logic here to handle overlaps if needed
         });
     }),
 });

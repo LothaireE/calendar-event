@@ -10,7 +10,6 @@ import { redirect } from "next/navigation";
 
 
 export async function createEvent(unsafeData: z.infer<typeof eventFormSchema>) {
-    // Promise<{ success: boolean; data?: z.infer<typeof eventFormSchema>; error?: boolean } | undefined > {
     const { userId } = await auth();
     const { success, data } = eventFormSchema.safeParse(unsafeData);
     
@@ -30,7 +29,6 @@ export async function updateEvent(
     id: string,
     unsafeData: z.infer<typeof eventFormSchema>
     ) : Promise<{ error: boolean} | undefined > {
-    // Promise<{ success: boolean; data?: z.infer<typeof eventFormSchema>; error?: boolean } | undefined > {
     const { userId } = await auth();
     const { success, data } = eventFormSchema.safeParse(unsafeData);
     
@@ -42,7 +40,7 @@ export async function updateEvent(
         .where(and(eq(EventsTable.id, id), eq(EventsTable.clerkUserId, userId)));
     
     if (rowCount[0].value === 0) {
-        return { error: true }; // pas d'event trouvé à mettre à jour
+        return { error: true };
     }
     await db.update(EventsTable)
         .set({ ...data })

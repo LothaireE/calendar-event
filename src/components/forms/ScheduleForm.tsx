@@ -208,12 +208,10 @@ export default function ScheduleForm ({
                     </TableBody>
                 </Table>
             </form>
-                <div className="flex gap-2 justify-end">
+            {/* move cette div dans le form au dessus */}
+                <div className="flex gap-2 justify-end"> 
                     <Button type="submit" 
                         onClick={form.handleSubmit(onSubmit)}
-                        // onClick={()=> form.handleSubmit(onSubmit)}
-                        // onClick={()=> form.handleSubmit(onSubmit)}
-
                         disabled={form.formState.isSubmitting}
                         >
                         Save
@@ -223,76 +221,3 @@ export default function ScheduleForm ({
         </Form>
     );
 };
-
-
-
-// <div className="grid grid-cols-[auto,1fr] gap-y-6 gap-x-4">
-//                     {DAY_OF_WEEK_IN_ORDER.map(dayOfWeek => (
-//                         <div className="flex " key={dayOfWeek}>
-//                             <div className="capitalize text-sm font-semibold">{dayOfWeek}</div>
-//                             <div className="flex flex-col gap-2">
-//                                 <Button 
-//                                     className="size-6 p-1"
-//                                     type="button" 
-//                                     variant="outline"
-//                                     asChild
-//                                     onClick={()=> {
-//                                         addAvailability({
-//                                             dayOfWeek,
-//                                             startTime: "9:00",
-//                                             endTime: "17:00"
-//                                         })
-//                                     }}
-//                                     >
-//                                     <Plus
-//                                         className="size-4"
-//                                         />
-//                                 </Button>
-//                                 {groupeAvailabilityFields[dayOfWeek]?.map((field, labelIndex)=>(
-//                                         <div key={labelIndex} className="flex flex-col gap-1">
-//                                             <div className="flex gap-2 items-center">
-//                                                 <FormField
-//                                                     control={form.control}
-//                                                     name={`availabilities.${field.index}.startTime`}
-//                                                     render={({ field }) => (
-//                                                         <FormControl>
-//                                                         <FormItem>
-//                                                                 <Input 
-//                                                                     className="w-24" 
-//                                                                     aria-label={`${dayOfWeek} Start Time ${labelIndex + 1}`}
-//                                                                     {...field} />
-//                                                             </FormItem> 
-//                                                         </FormControl>
-                                                        
-//                                                     )}
-//                                                 />
-//                                                 <FormField
-//                                                     control={form.control}
-//                                                     name={`availabilities.${field.index}.endTime`}
-//                                                     render={({ field }) => (
-//                                                         <FormControl>
-//                                                         <FormItem>
-//                                                                 <Input 
-//                                                                     className="w-24" 
-//                                                                     aria-label={`${dayOfWeek} End Time ${labelIndex + 1}`}
-//                                                                     {...field} />
-//                                                             </FormItem> 
-//                                                         </FormControl>
-//                                                     )}
-//                                                 />
-//                                         </div>
-//                                         <FormMessage>
-//                                             {form.formState.errors.availabilities?.at?.(field.index)?.root?.message} 
-//                                             {/* message comiing from scheduleFormSchema -> overlaps -> message */}
-//                                         </FormMessage>
-//                                         <FormMessage>
-//                                             {form.formState.errors.availabilities?.at?.(field.index)?.startTime?.message} 
-//                                             {/* message comiing from scheduleFormSchema -> overlaps -> message */}
-//                                         </FormMessage>
-//                                         <FormMessage>
-//                                             {form.formState.errors.availabilities?.at?.(field.index)?.endTime?.message} 
-//                                             {/* message comiing from scheduleFormSchema -> overlaps -> message */}
-//                                         </FormMessage>
-//                                         </div>                                              
-//                                 ))}
-//                             </div>

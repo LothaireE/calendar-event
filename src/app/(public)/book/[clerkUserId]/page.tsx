@@ -4,9 +4,12 @@ import { notFound } from "next/navigation";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatEventDuration } from "@/lib/formatters";
 import { Button } from "@/components/ui/button";
-import { Link } from "lucide-react";
+import Link from "next/link";
+import { displayFullName } from "@/lib/utils";
 
-// export default async function BookingPage ({ params : clerkUserId } : {params : { clerkUserId : string }}) {
+
+export const revalidate = 0
+
 export default async function BookingPage (props: { params: Promise<{ clerkUserId: string }> }) {
     const params = await props.params;
     const { clerkUserId } = params
@@ -24,13 +27,13 @@ export default async function BookingPage (props: { params: Promise<{ clerkUserI
 const clerk = await clerkClient();
 const user = await clerk.users.getUser(clerkUserId);
 
-const displayFullName = user.firstName && user.lastName
-    ? `${user.firstName} ${user.lastName}`
-    : user.username || "User";
+
+const fullName = displayFullName(user.firstName, user.lastName, user.username)
+
 
 return <div className="max-w-5xl mx-auto">
     <div className="text-4xl md:text-5xl font-semibold mb-4 text-center">
-        {displayFullName}
+        {fullName}
     </div>
 
     <div className="text-muted-foreground mb-6 max-w-sm mx-auto text-center">
@@ -39,10 +42,7 @@ return <div className="max-w-5xl mx-auto">
 
     <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(300px,1fr))]">
         { events.map((event) => (
-            // <div key={event.id} className="flex flex-col items-center justify-center gap-4 text-center">
-            // <div key={event.id} className="items-center justify-center gap-4 text-center">
             <EventCard key={event.id} {...event} />
-            // </div>
         ))}
     </div>
 </div>
@@ -67,7 +67,7 @@ function EventCard({ id, title, description, date, durationInMinutes, clerkUserI
     <Card className="flex flex-col">
 
       <CardHeader >
-        <CardTitle>{title}</CardTitle>
+        <CardTitle>title: {title}</CardTitle>
         <CardDescription>
           {new Date(date).toLocaleDateString()}
           <br />
@@ -85,9 +85,11 @@ function EventCard({ id, title, description, date, durationInMinutes, clerkUserI
       {/* <p className="text-sm text-gray-500">Date: {new Date(date).toLocaleDateString()}</p> */}
       </CardDescription>
       <CardFooter
-        className={`flex justify-end w-full gap-2 mt-auto`}
+        className="flex justify-end w-full gap-2 mt-auto"
       >
-        <Button asChild>
+        <Button 
+        variant="default"
+        asChild>
           <Link href={`/book/${clerkUserId}/edit/${id}`}>
             Select
           </Link>

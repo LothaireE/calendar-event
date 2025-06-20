@@ -1,7 +1,4 @@
 import { z } from 'zod';
-// This schema defines the structure of the event form data
-
-
 
 export const eventFormSchema = z.object({
     title: z.string().min(1, "Title is required").max(256, "Title must be less than 256 characters"),

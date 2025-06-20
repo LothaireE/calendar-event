@@ -4,12 +4,10 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ClerkProvider } from "@clerk/nextjs";
 
-
 const inter = Inter({
   variable: "--font-sans",
-  subsets: ['latin'],
-})
-
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -25,12 +23,14 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body
-          className={cn("min-h-screen, bg-background font-sans antialiased", inter.variable)}
+          className={cn(
+            "min-h-screen, bg-background font-sans antialiased",
+            inter.variable,
+          )}
         >
           {children}
         </body>
       </html>
     </ClerkProvider>
-
   );
 }

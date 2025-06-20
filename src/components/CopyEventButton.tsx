@@ -6,29 +6,31 @@ import { CopyCheck, CopyCheckIcon, CopyX } from "lucide-react";
 
 type CopyState = "idle" | "copied" | "error";
 
-export function CopyEventButton ({ eventId, clerkUserId, ...buttonProps} : Omit<React.ComponentProps<typeof Button>, "children" | "onClick"> & {
+export function CopyEventButton({
+  eventId,
+  clerkUserId,
+  ...buttonProps
+}: Omit<React.ComponentProps<typeof Button>, "children" | "onClick"> & {
   eventId: string;
   clerkUserId: string;
 }) {
-
   const [copyState, setCopyState] = useState<CopyState>("idle");
 
   const handleCopy = () => {
     const url = `${location.origin}/book/${clerkUserId}/${eventId}`;
     navigator.clipboard
-        .writeText(url)
-        .then(() => {
-          setCopyState("copied");
-          setTimeout(() => setCopyState("idle"), 2000); // Reset after 2 seconds
-        })
-        .catch(() => {
-          setCopyState("error");
-          setTimeout(() => setCopyState("idle"), 2000); // Reset after 2 seconds
-        }
-    );
+      .writeText(url)
+      .then(() => {
+        setCopyState("copied");
+        setTimeout(() => setCopyState("idle"), 2000); // Reset after 2 seconds
+      })
+      .catch(() => {
+        setCopyState("error");
+        setTimeout(() => setCopyState("idle"), 2000); // Reset after 2 seconds
+      });
   };
 
-  const CopyIcon = getCopyIcon(copyState)
+  const CopyIcon = getCopyIcon(copyState);
 
   return (
     <Button onClick={handleCopy} {...buttonProps}>
@@ -36,7 +38,6 @@ export function CopyEventButton ({ eventId, clerkUserId, ...buttonProps} : Omit<
       {getChildren(copyState)}
     </Button>
   );
-
 }
 
 function getCopyIcon(copyState: CopyState) {

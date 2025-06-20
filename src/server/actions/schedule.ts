@@ -1,7 +1,7 @@
-"use server"
+"use server";
 
-import "use-server"
-import { scheduleFormSchema } from "@/schema/schedule"
+import "use-server";
+import { scheduleFormSchema } from "@/schema/schedule";
 import { auth } from "@clerk/nextjs/server";
 import { db } from "@/drizzle/db";
 import { ScheduleAvailabilityTable, ScheduleTable } from "@/drizzle/schema";
@@ -9,34 +9,45 @@ import { BatchItem } from "drizzle-orm/batch";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
-export async function saveSchedule(unsafeData: z.infer<typeof scheduleFormSchema>) {
-    const { userId } = await auth();
-        const { success, data } = scheduleFormSchema.safeParse(unsafeData);
-        
-        if (!success || !userId) return { error: true };
+export async function saveSchedule(
+  unsafeData: z.infer<typeof scheduleFormSchema>,
+) {
+  const { userId } = await auth();
+  const { success, data } = scheduleFormSchema.safeParse(unsafeData);
 
-    const { availabilities, ...scheduleData } = data
+  if (!success || !userId) return { error: true };
 
-    const [{id: scheduleId }] = await db.insert(ScheduleTable).values({...scheduleData, clerkUserId: userId}).onConflictDoUpdate({
-        target: ScheduleTable.clerkUserId,
-        set: scheduleData
-    }).returning({id: ScheduleTable.id})
+  const { availabilities, ...scheduleData } = data;
 
-    // delete all the pre-existing availabilities as it is easier than trying to figure them out one by one
-    // so delete them all and re-add them
+  const [{ id: scheduleId }] = await db
+    .insert(ScheduleTable)
+    .values({ ...scheduleData, clerkUserId: userId })
+    .onConflictDoUpdate({
+      target: ScheduleTable.clerkUserId,
+      set: scheduleData,
+    })
+    .returning({ id: ScheduleTable.id });
 
-    const statements :[BatchItem<"pg">] = [ // Batching them allows us to roll back undelete them if the saving-insert fails 
-        db.delete(ScheduleAvailabilityTable).where(eq(ScheduleAvailabilityTable.id, scheduleId))
-    ]
+  // delete all the pre-existing availabilities as it is easier than trying to figure them out one by one
+  // so delete them all and re-add them
 
-    if (availabilities.length > 0) {
-        statements.push(db.insert(ScheduleAvailabilityTable).values(
-            availabilities.map(availability => ({
-                ...availability,
-                scheduleId
-            }))
-        ))
-    }
+  const statements: [BatchItem<"pg">] = [
+    // Batching them allows us to roll back undelete them if the saving-insert fails
+    db
+      .delete(ScheduleAvailabilityTable)
+      .where(eq(ScheduleAvailabilityTable.id, scheduleId)),
+  ];
 
-    await db.batch(statements)
+  if (availabilities.length > 0) {
+    statements.push(
+      db.insert(ScheduleAvailabilityTable).values(
+        availabilities.map((availability) => ({
+          ...availability,
+          scheduleId,
+        })),
+      ),
+    );
+  }
+
+  await db.batch(statements);
 }

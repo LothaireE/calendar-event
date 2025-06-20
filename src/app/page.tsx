@@ -4,8 +4,8 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
 export default async function HomePage() {
-    const { userId } = await auth();
-    if (userId !== null) redirect("/events");
+  const { userId } = await auth();
+  if (userId !== null) redirect("/events");
 
   return (
     <div className="text-center container mx-auto my-4">
@@ -18,7 +18,7 @@ export default async function HomePage() {
         <Button asChild>
           <SignUpButton />
         </Button>
-        <Button >
+        <Button>
           <UserButton />
         </Button>
       </div>

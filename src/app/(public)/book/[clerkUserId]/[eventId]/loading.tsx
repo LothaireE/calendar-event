@@ -1,4 +1,4 @@
-import { LoaderCircle } from "lucide-react"
+import { LoaderCircle } from "lucide-react";
 
 export default function Loading() {
   return (
@@ -8,5 +8,5 @@ export default function Loading() {
       </div>
       <LoaderCircle className="text-muted-foreground size-24 animate-spin" />
     </div>
-  )
+  );
 }

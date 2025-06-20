@@ -1,13 +1,13 @@
-import { NavLink } from './NavLink'
+import { NavLink } from "./NavLink";
 
 export interface NavItem {
-  title: string
-  href: string
+  title: string;
+  href: string;
 }
 
 interface HeaderNavProps {
-  items: NavItem[]
-  className?: string
+  items: NavItem[];
+  className?: string;
 }
 
 export function HeaderNav({ items, className }: HeaderNavProps) {
@@ -19,5 +19,5 @@ export function HeaderNav({ items, className }: HeaderNavProps) {
         </NavLink>
       ))}
     </nav>
-  )
+  );
 }

@@ -8,18 +8,20 @@ export default async function CreateEventPage() {
   if (!userId) return redirectToSignIn();
 
   return (
-      <Card className="max-w-md mx-auto shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-center text-3xl lg:text-4xl xl:text-5xl mb-6">
-            Create New Event
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="text-center">
-          <p className="mb-4">This page is only accessible to authenticated users.</p>
-          <Button asChild>
-            <EventForm />
-          </Button>
-        </CardContent>
-      </Card>
+    <Card className="max-w-md mx-auto shadow-lg">
+      <CardHeader>
+        <CardTitle className="text-center text-3xl lg:text-4xl xl:text-5xl mb-6">
+          Create New Event
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="text-center">
+        <p className="mb-4">
+          This page is only accessible to authenticated users.
+        </p>
+        <Button asChild>
+          <EventForm />
+        </Button>
+      </CardContent>
+    </Card>
   );
 }

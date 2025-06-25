@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -9,6 +10,7 @@ import { db } from "@/drizzle/db";
 import { formatDateTime } from "@/lib/formatters";
 import { displayFullName } from "@/lib/utils";
 import { clerkClient } from "@clerk/nextjs/server";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 export const revalidate = 0;
@@ -38,17 +40,29 @@ export default async function SuccessPage(props: {
     calendarUser.lastName,
   );
   return (
-    <Card className="max-w-xl mx-auto">
-      <CardHeader>
-        <CardTitle>
-          Successfully Booked {event.title} with {fullName}
-        </CardTitle>
-        <CardDescription>{formatDateTime(startTimeDate)}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        You should receive an email confirmation shortly. You can safely close
-        this page now.
-      </CardContent>
-    </Card>
+    <div className="container">
+      <Card className="max-w-xl mx-auto">
+        <CardHeader>
+          <CardTitle>
+            Successfully Booked {event.title} with {fullName}
+          </CardTitle>
+          <CardDescription>{formatDateTime(startTimeDate)}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          You will receive an email confirmation shortly. You can safely close
+          this page now.
+        </CardContent>
+      </Card>
+      <div className="flex gap-2 justify-center mt-4">
+        <Button asChild type="button" variant="outline">
+          <Link href={`/book/${clerkUserId}`}>Go Back</Link>
+        </Button>
+        <Button asChild type="button" variant="default">
+          <Link href={`/book/${clerkUserId}/${eventId}`}>
+            Book Another Event
+          </Link>
+        </Button>
+      </div>
+    </div>
   );
 }

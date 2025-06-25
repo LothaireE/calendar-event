@@ -29,29 +29,27 @@ export default async function EventsPage() {
   return (
     <>
       <div className="flex flex-col gap-4 items-baseline">
-        <h1 className="text-center text-3xl lg:text-4xl xl:text-5xl mb-6">
+        {/* <h1 className="text-center text-3xl lg:text-4xl xl:text-5xl mb-6">
           Event Private Page
-        </h1>
-        <p>This page is only accessible to authenticated users.</p>
+        </h1>  */}
+        <div className="flex justify-between items-center w-full mb-6">
+          <p className="text-muted-foreground">
+            This page is only accessible to authenticated users.
+          </p>
 
-        <Button asChild>
-          <Link href="/events/create" className="flex items-center">
-            <CalendarPlus className="mr-2 size-4" />
-            Create New Event
-          </Link>
-        </Button>
-
+          <Button asChild>
+            <Link href="/events/create" className="flex items-center">
+              <CalendarPlus className="mr-2 size-4" />
+              Create New Event
+            </Link>
+          </Button>
+        </div>
         {events.length > 0 ? (
           <>
-            <h1>Events</h1>
-            <div className="grid gap-4 grids-cols-[repeat(auto-fill,minmax(400px,1fr))]">
+            <p>Here is a list of your events</p>
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 self-center">
               {events.map((event) => (
-                <div
-                  key={event.id}
-                  className="flex flex-col items-center justify-center gap-4 text-center"
-                >
-                  <EventCard key={event.id} {...event} />
-                </div>
+                <EventCard key={event.id} {...event} />
               ))}
             </div>
           </>

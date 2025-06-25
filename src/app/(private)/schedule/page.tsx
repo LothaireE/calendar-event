@@ -22,7 +22,7 @@ export default async function SchedulePage() {
         </CardTitle>
       </CardHeader>
       <CardContent className="text-center">
-        <p className="mb-4">
+        <p className="mb-4 text-muted-foreground">
           This page is only accessible to authenticated users.
         </p>
         <ScheduleForm schedule={schedule} />

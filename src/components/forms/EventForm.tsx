@@ -129,13 +129,13 @@ export default function EventForm({
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Event Title</FormLabel>
+              <FormLabel>Title</FormLabel>
               <FormControl>
                 <Input {...field} placeholder="Enter event title" />
               </FormControl>
-              <FormDescription>
+              {/* <FormDescription>
                 This is the title of your event.
-              </FormDescription>
+              </FormDescription> */}
               <FormMessage />
             </FormItem>
           )}
@@ -146,7 +146,7 @@ export default function EventForm({
           name="date"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>Event Date</FormLabel>
+              <FormLabel>Date</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -170,9 +170,13 @@ export default function EventForm({
                   <Calendar
                     mode="single"
                     selected={field.value ? new Date(field.value) : undefined}
-                    onSelect={field.onChange}
+                    // onSelect={field.onChange}
                     disabled={(date) => date < yesterday}
                     captionLayout="dropdown"
+                    onSelect={(value) => {
+                      console.log("Selected date:", value);
+                      field.onChange(value?.toISOString().slice(0, 10));
+                    }}
                   />
                 </PopoverContent>
               </Popover>
@@ -245,75 +249,75 @@ export default function EventForm({
           )}
         />
         {/* Submit button */}
-      </form>
-      <div className="flex gap-2 justify-end">
-        <Button
-          asChild
-          type="button"
-          variant="outline"
-          disabled={
-            form.formState.isSubmitting ||
-            form.formState.isValidating ||
-            isDeletePending
-          }
-        >
-          <Link href="/events">Go Back</Link>
-        </Button>
-        <Button
-          type="submit"
-          onClick={form.handleSubmit(onSubmit)}
-          disabled={
-            form.formState.isSubmitting ||
-            form.formState.isValidating ||
-            isDeletePending
-          }
-        >
-          Save Event
-        </Button>
-        {event && (
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button
-                variant="destructiveGhost"
-                disabled={
-                  form.formState.isSubmitting ||
-                  form.formState.isValidating ||
-                  isDeletePending
-                }
-              >
-                Delete Event
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete the
-                  event.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-            </AlertDialogContent>
-            <AlertDialogFooter>
-              <AlertDialogContent>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
+        <div className="flex gap-2 justify-end">
+          <Button
+            asChild
+            type="button"
+            variant="outline"
+            disabled={
+              form.formState.isSubmitting ||
+              form.formState.isValidating ||
+              isDeletePending
+            }
+          >
+            <Link href="/events">Go Back</Link>
+          </Button>
+          <Button
+            type="submit"
+            onClick={form.handleSubmit(onSubmit)}
+            disabled={
+              form.formState.isSubmitting ||
+              form.formState.isValidating ||
+              isDeletePending
+            }
+          >
+            Save Event
+          </Button>
+          {event && (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  variant="destructiveGhost"
                   disabled={
                     form.formState.isSubmitting ||
                     form.formState.isValidating ||
                     isDeletePending
                   }
-                  onClick={() => {
-                    handleDelete();
-                  }}
-                  variant="destructive"
                 >
-                  Delete
-                </AlertDialogAction>
+                  Delete Event
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete
+                    the event.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
               </AlertDialogContent>
-            </AlertDialogFooter>
-          </AlertDialog>
-        )}
-      </div>
+              <AlertDialogFooter>
+                <AlertDialogContent>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    disabled={
+                      form.formState.isSubmitting ||
+                      form.formState.isValidating ||
+                      isDeletePending
+                    }
+                    onClick={() => {
+                      handleDelete();
+                    }}
+                    variant="destructive"
+                  >
+                    Delete
+                  </AlertDialogAction>
+                </AlertDialogContent>
+              </AlertDialogFooter>
+            </AlertDialog>
+          )}
+        </div>
+      </form>
     </Form>
   );
 }

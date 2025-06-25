@@ -127,7 +127,7 @@ export default function MeetingForm({
             control={form.control}
             name="date"
             render={({ field }) => (
-              <FormItem className="flex flex-1">
+              <FormItem className="flex flex-1 align-center">
                 <FormLabel>Meeting Date</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -168,7 +168,7 @@ export default function MeetingForm({
             )}
           />
           {/* StartTime field */}
-          <FormField
+          {/* <FormField
             control={form.control}
             name="startTime"
             render={({ field }) => (
@@ -204,6 +204,48 @@ export default function MeetingForm({
                   </SelectContent>
                 </Select>
                 <FormMessage className="self-center" />
+              </FormItem>
+            )}
+          /> */}
+          <FormField
+            control={form.control}
+            name="startTime"
+            render={({ field }) => (
+              <FormItem className="flex flex-1 align-center">
+                <FormLabel>Meeting Time</FormLabel>
+                <Select
+                  disabled={date == null || timezone == null}
+                  onValueChange={(value) =>
+                    field.onChange(new Date(Date.parse(value)))
+                  }
+                  defaultValue={field.value?.toISOString()}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue
+                        placeholder={
+                          date == null || timezone == null
+                            ? "Select a date/timezone first"
+                            : "Select a meeting time"
+                        }
+                      />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {validTimesInTimezone
+                      .filter((time) => isSameDay(time, date))
+                      .map((time) => (
+                        <SelectItem
+                          key={time.toISOString()}
+                          value={time.toISOString()}
+                        >
+                          {formatTimeString(time)}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -244,7 +286,7 @@ export default function MeetingForm({
           name="guestNote"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Note:</FormLabel>
+              <FormLabel>Notes:</FormLabel>
               <FormControl>
                 <Textarea className="resize-none" {...field} />
               </FormControl>

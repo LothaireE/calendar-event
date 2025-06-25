@@ -16,5 +16,7 @@ export const eventFormSchema = z.object({
     .min(1, "Duration must be at least 1 minute")
     .max(60 * 24, "Duration cannot exceed 24 hours")
     .positive("Duration must be a greater than 0"),
-  date: z.string().max(10),
+  date: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in YYYY-MM-DD format"),
 });
